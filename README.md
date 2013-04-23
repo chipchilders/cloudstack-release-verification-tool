@@ -21,7 +21,7 @@ The specific command step dictionary objects contain the following keys:
 
 Example:
 
-'''
+```
 [
     {
         "command":"rm -Rf /tmp/cloudstack", 
@@ -41,4 +41,4 @@ Example:
         "must_work":True
     },
 ]
-'''
+```
