@@ -7,7 +7,9 @@ This was created to make the more repititive aspects of verifying an Apache Clou
 
 How to run:
 
-./verify-release.py -i instructions.conf
+./verify-release.py -i instructions.conf -c <commit-sh> -v <version>
+
+Adding -d will output all stdout and stderr text after the commands are run, while excluding it will only cause output on a non-zero exit code from the command.
 
 How to edit instructions.conf (or your own file):
 

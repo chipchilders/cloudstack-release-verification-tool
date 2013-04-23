@@ -6,6 +6,7 @@ import subprocess
 import ast
 
 class ReleaseVerifier:
+    debug = False
     results = []
     end_instructions = "\n\n"
     OKGREEN = '\033[92m'
@@ -15,10 +16,11 @@ class ReleaseVerifier:
     FAIL = '\033[91m'
     ENDC = '\033[0m'
 
-    def __init__(self, input_commands, version, commitsh):
+    def __init__(self, input_commands, version, commitsh, debug): 
         self.input_commands = input_commands
         self.version = version
         self.commitsh = commitsh
+        self.debug = debug
 
     def do_replacements(self, toclean):
         toclean = toclean.replace("${commit-sh}", self.commitsh)
@@ -37,7 +39,7 @@ class ReleaseVerifier:
             action["cwd"] = self.do_replacements(action["cwd"])
 
         try:
-            print "COMMAND: " + action["command"]
+            print self.HEADER + "RUNNING COMMAND: " + action["command"] + self.ENDC
             if "cwd" in action:
                 output = subprocess.check_output("cd " + action["cwd"] + "; " + action["command"], stderr=subprocess.STDOUT, shell=True)
             else:
@@ -45,7 +47,8 @@ class ReleaseVerifier:
             action["result"] = "PASS"
             action["output"] = output
             self.results.append(action)
-            print "OUTPUT: " + output
+            if self.debug: 
+                print "OUTPUT: " + output
         except:
             if action["must_work"]:
                 action["result"] = "FAILED"
@@ -87,8 +90,9 @@ def main(argv):
     inputfile = ''
     version = ''
     commitsh = ''
+    debug = False
     try:
-        opts, args = getopt.getopt(argv,"hi:c:v:")
+        opts, args = getopt.getopt(argv,"hi:c:v:d")
     except getopt.GetoptError:
         print 'verify-release.py -i <inputfile> -c <commit-sh> -v <version>'
         sys.exit(2)
@@ -102,12 +106,14 @@ def main(argv):
             commitsh = arg
         elif opt in ("-v"):
             version = arg
+        elif opt in ("-d"):
+            debug = True
 
     myfile = open(inputfile, "r")
     inputfiletext=myfile.read()
 
     input_commands = ast.literal_eval(inputfiletext)
-    x = ReleaseVerifier(input_commands, version, commitsh)
+    x = ReleaseVerifier(input_commands, version, commitsh, debug)
     x.make_calls()
     x.print_results()
 
