@@ -41,4 +41,46 @@
         "command":"gpg --verify apache-cloudstack-4.1.0-src.tar.bz2.asc", 
         "must_work":True
     },
+    {
+        "cwd":"/tmp/cloudstack",
+        "command":"gpg --print-md MD5 apache-cloudstack-4.1.0-src.tar.bz2 | diff - apache-cloudstack-4.1.0-src.tar.bz2.md5", 
+        "must_work":True
+    },
+    {
+        "cwd":"/tmp/cloudstack",
+        "command":"gpg --print-md SHA512 apache-cloudstack-4.1.0-src.tar.bz2 | diff - apache-cloudstack-4.1.0-src.tar.bz2.sha", 
+        "must_work":True
+    },
+    {
+        "command":"mkdir /tmp/cloudstack/git", 
+        "must_work":True
+    },
+    {
+        "command":"mkdir /tmp/cloudstack/tree", 
+        "must_work":True
+    },
+    {
+        "cwd":"/tmp/cloudstack",
+        "command":"git clone -q https://git-wip-us.apache.org/repos/asf/cloudstack.git /tmp/cloudstack/git", 
+        "must_work":True
+    },
+    {
+        "cwd":"/tmp/cloudstack/git",
+        "command":"git archive --prefix=/tmp/cloudstack/tree/ foo | tar Pxf -", 
+        "must_work":False
+    },
+    {
+        "cwd":"/tmp/cloudstack",
+        "command":"tar xvfj apache-cloudstack-4.1.0-src.tar.bz2",
+        "must_work":True
+    },
+    {
+        "command":"diff -r /tmp/cloudstack/apache-cloudstack-4.1.0-src /tmp/cloudstack/tree", 
+        "must_work":True
+    },
+    {
+        "cwd":"/tmp/cloudstack/apache-cloudstack-4.1.0-src",
+        "command":"mvn --projects='org.apache.cloudstack:cloudstack' org.apache.rat:apache-rat-plugin:0.8:check",
+        "must_work":True
+    },
 ] 
