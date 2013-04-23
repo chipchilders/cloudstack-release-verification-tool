@@ -17,14 +17,17 @@ class ReleaseVerifier:
         self.version = version
         self.commitsh = commitsh
 
-    def do_replacements(self, command):
-        command = command.replace("${commit-sh}", self.commitsh)
-        command = command.replace("${version}", self.version)
-        return command
+    def do_replacements(self, toclean):
+        toclean = toclean.replace("${commit-sh}", self.commitsh)
+        toclean = toclean.replace("${version}", self.version)
+        return toclean
 
     def make_call(self, action):
         output = ""
         action["command"] = self.do_replacements(action["command"])
+        if "cwd" in action:
+            action["cwd"] = self.do_replacements(action["cwd"])
+
         try:
             print "COMMAND: " + action["command"]
             if "cwd" in action:
