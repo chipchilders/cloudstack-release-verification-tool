@@ -7,7 +7,10 @@ import ast
 
 class ReleaseVerifier:
     results = []
+    end_instructions = "\n\n"
     OKGREEN = '\033[92m'
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
     WARNING = '\033[93m'
     FAIL = '\033[91m'
     ENDC = '\033[0m'
@@ -24,6 +27,11 @@ class ReleaseVerifier:
 
     def make_call(self, action):
         output = ""
+
+        if "instructions" in action:
+            self.end_instructions = self.end_instructions + action["instructions"] + "\n"
+            return
+
         action["command"] = self.do_replacements(action["command"])
         if "cwd" in action:
             action["cwd"] = self.do_replacements(action["cwd"])
@@ -52,10 +60,19 @@ class ReleaseVerifier:
                 print "OUTPUT: " + output
 
     def make_calls(self):
+        continueActions = True
         for action in self.input_commands:
-            self.make_call(action)
+            try:
+                if continueActions:
+                    self.make_call(action)
+                else:
+                    action["result"] = "SKIPPED"
+                    self.results.append(action)
+            except:
+                continueActions = False
 
     def print_results(self):
+        print self.HEADER + "AUTOMATED TESTING RESULTS:" + self.ENDC
         for action in self.results:
             if action["result"]=="PASS":
                 print "[" + self.OKGREEN + action["result"] + self.ENDC + "]\t\t" + action["command"]
@@ -63,6 +80,8 @@ class ReleaseVerifier:
                 print "[" + self.WARNING + action["result"] + self.ENDC + "]\t" + action["command"]
             else:
                 print "[" + self.FAIL + action["result"] + self.ENDC + "]\t" + action["command"]
+        
+        print self.HEADER + "POST AUTOMATION STEPS:" + self.end_instructions + self.ENDC
 
 def main(argv):
     inputfile = ''

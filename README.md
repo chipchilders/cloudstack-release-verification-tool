@@ -15,9 +15,10 @@ The format of the file is expected to be a python list, containing dictionary ob
 
 The specific command step dictionary objects contain the following keys:
 
-* command (required) - the string to execute within the shell
-* must_work (required) - True or False, signifying the reaction of the verification script to any non-zero exit status from the command (True will exit immediately, while False will allow processing to continue)
-* cwd (optional) - The path to cd into prior to the command being run.  This is a critical field, given that each command is executed within it's own context (i.e.: you can't have a "command" to cd into a folder, and then expect to be in that folder for the next command)
+* instructions - (excludes all other keys) A string appended to the post automation instruction set printed to the user
+* command - The string to execute within the shell
+* must_work - (Required if "command" key exists) True or False, signifying the reaction of the verification script to any non-zero exit status from the command (True will exit immediately, while False will allow processing to continue)
+* cwd - (Optional and only used if "command" key exists) The path to cd into prior to the command being run.  This is a critical field, given that each command is executed within it's own context (i.e.: you can't have a "command" to cd into a folder, and then expect to be in that folder for the next command)
 
 There are also 2 replacement strings that can be used in the instructions.conf file:
 
@@ -47,5 +48,10 @@ Example:
         "command":"wget --no-check-certificate -q https://dist.apache.org/repos/dist/release/cloudstack/KEYS", 
         "must_work":True
     },
+    {
+        "instructions":"""
+This is a post instruction
+that has two lines"""
+    }
 ]
 ```
