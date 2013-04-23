@@ -1,0 +1,44 @@
+[
+    {
+        "command":"rm -Rf /tmp/cloudstack", 
+        "must_work":True
+    },
+    {
+        "command":"rm -Rf ~/.m2", 
+        "must_work":True
+    },
+    {
+        "command":"mkdir /tmp/cloudstack", 
+        "must_work":True
+    },
+    {
+        "cwd":"/tmp/cloudstack",
+        "command":"wget --no-check-certificate -q https://dist.apache.org/repos/dist/release/cloudstack/KEYS", 
+        "must_work":True
+    },
+    {
+        "cwd":"/tmp/cloudstack",
+        "command":"wget --no-check-certificate -q https://dist.apache.org/repos/dist/dev/cloudstack/4.1.0/apache-cloudstack-4.1.0-src.tar.bz2", 
+        "must_work":True
+    },
+    {
+        "cwd":"/tmp/cloudstack",
+        "command":"wget --no-check-certificate -q https://dist.apache.org/repos/dist/dev/cloudstack/4.1.0/apache-cloudstack-4.1.0-src.tar.bz2.asc", 
+        "must_work":True
+    },
+    {
+        "cwd":"/tmp/cloudstack",
+        "command":"wget --no-check-certificate -q https://dist.apache.org/repos/dist/dev/cloudstack/4.1.0/apache-cloudstack-4.1.0-src.tar.bz2.md5", 
+        "must_work":True
+    },
+    {
+        "cwd":"/tmp/cloudstack",
+        "command":"wget --no-check-certificate -q https://dist.apache.org/repos/dist/dev/cloudstack/4.1.0/apache-cloudstack-4.1.0-src.tar.bz2.sha", 
+        "must_work":True
+    },
+    {
+        "cwd":"/tmp/cloudstack",
+        "command":"gpg --verify apache-cloudstack-4.1.0-src.tar.bz2.asc", 
+        "must_work":True
+    },
+] 
