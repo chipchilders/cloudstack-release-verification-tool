@@ -87,7 +87,11 @@ class ReleaseVerifier:
         print self.HEADER + "POST AUTOMATION STEPS:" + self.end_instructions + self.ENDC
 
 def print_help():
-    print 'verify-release.py -i <inputfile> [-c commitsh] [-v version]'
+    print 'verify-release.py -i <inputfile> [-c commitsh] [-v version] [-d]'
+    print ' -i : (required) configuration file with instructions to execute'
+    print ' -c : A commit-sh which can be used as a replacement string within the configuration file'
+    print ' -v : A version number which can be used as a replacement string within the configuration file'
+    print ' -d : Debug output (all stdout and stderr is printed for each command'
 
 def main(argv):
     inputfile = ''

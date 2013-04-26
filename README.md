@@ -57,3 +57,32 @@ that has two lines"""
     }
 ]
 ```
+
+When the command is run, you will see output similar to the following:
+```
+RUNNING COMMAND: ls /tmp
+RUNNING COMMAND: exit 0
+RUNNING COMMAND: ls ~
+AUTOMATED TESTING RESULTS:
+[PASS]      ls /tmp
+[PASS]      exit 0
+[PASS]      ls ~
+POST AUTOMATION STEPS:
+
+This is a test instruction
+
+This is a test
+multi-line instruction.
+```
+
+And a failed run:
+```
+RUNNING COMMAND: ls /tmp
+RUNNING COMMAND: exit 1
+OUTPUT: 
+AUTOMATED TESTING RESULTS:
+[PASS]      ls /tmp
+[FAILED]    exit 1
+[SKIPPED]   ls ~
+POST AUTOMATION STEPS:
+```
