@@ -86,6 +86,9 @@ class ReleaseVerifier:
         
         print self.HEADER + "POST AUTOMATION STEPS:" + self.end_instructions + self.ENDC
 
+def print_help():
+    print 'verify-release.py -i <inputfile> [-c commitsh] [-v version]'
+
 def main(argv):
     inputfile = ''
     version = ''
@@ -94,11 +97,11 @@ def main(argv):
     try:
         opts, args = getopt.getopt(argv,"hi:c:v:d")
     except getopt.GetoptError:
-        print 'verify-release.py -i <inputfile> -c <commit-sh> -v <version>'
+        print_help()
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print 'verify-release.py -i <inputfile>'
+            print_help()
             sys.exit()
         elif opt in ("-i", "--ifile"):
             inputfile = arg
@@ -108,6 +111,10 @@ def main(argv):
             version = arg
         elif opt in ("-d"):
             debug = True
+
+    if inputfile == '':
+        print_help()
+        sys.exit(2)
 
     myfile = open(inputfile, "r")
     inputfiletext=myfile.read()
