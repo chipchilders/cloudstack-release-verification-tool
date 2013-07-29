@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Cloudstack-release-verification-tool by chipchilders</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Cloudstack-release-verification-tool</h1>
+        <p>A python script used to more automatically verify Apache CloudStack release candidates.</p>
+
+        <p class="view"><a href="https://github.com/chipchilders/cloudstack-release-verification-tool">View the Project on GitHub <small>chipchilders/cloudstack-release-verification-tool</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/chipchilders/cloudstack-release-verification-tool/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/chipchilders/cloudstack-release-verification-tool/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/chipchilders/cloudstack-release-verification-tool">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="cloudstack-release-verification-tool" class="anchor" href="#cloudstack-release-verification-tool"><span class="octicon octicon-link"></span></a>cloudstack-release-verification-tool</h1>
+
+<p>A python script used to more automatically verify Apache CloudStack release candidates.</p>
+
+<p>This was created to make the more repititive aspects of verifying an Apache CloudStack release easier to complete, although it can be generalized by editing the instructions.conf file to suite your needs.</p>
+
+<p>How to run: <code>./verify-release.py -i instructions.conf -c &lt;commit-sh&gt; -v &lt;version&gt;</code></p>
+
+<p>Adding -d will output all stdout and stderr text after the commands are run, while excluding it will only cause output on a non-zero exit code from the command.</p>
+
+<p>How to edit instructions.conf (or your own file):</p>
+
+<p>The format of the file is expected to be a python list, containing dictionary objects that describe steps to be executed.  The parent object is a list specifically to ensure that the commands are executed in the order described.</p>
+
+<p>The specific command step dictionary objects contain the following keys:</p>
+
+<ul>
+<li>instructions - (excludes all other keys) A string appended to the post automation instruction set printed to the user</li>
+<li>command - The string to execute within the shell</li>
+<li>must_work - (Required if "command" key exists) True or False, signifying the reaction of the verification script to any non-zero exit status from the command (True will exit immediately, while False will allow processing to continue)</li>
+<li>cwd - (Optional and only used if "command" key exists) The path to cd into prior to the command being run.  This is a critical field, given that each command is executed within it's own context (i.e.: you can't have a "command" to cd into a folder, and then expect to be in that folder for the next command)</li>
+</ul><p>There are also 2 replacement strings that can be used in the instructions.conf file:</p>
+
+<ul>
+<li>${commit-sh} - passed in via the -c command line option, meant to be the commit-sh being tested</li>
+<li>${version} - passed in via the -v command line option, meant to be the version of the software being tested</li>
+</ul><p>These two replacement strings are useful in describing a generic testing process, and passing in the specific commitsh and version to be tested against.</p>
+
+<p>Example:</p>
+
+<pre><code>[
+    {
+        "command":"rm -Rf /tmp/cloudstack", 
+        "must_work":True
+    },
+    {
+        "command":"rm -Rf ~/.m2", 
+        "must_work":True
+    },
+    {
+        "command":"mkdir /tmp/cloudstack", 
+        "must_work":True
+    },
+    {
+        "cwd":"/tmp/cloudstack",
+        "command":"wget --no-check-certificate -q https://dist.apache.org/repos/dist/release/cloudstack/KEYS", 
+        "must_work":True
+    },
+    {
+        "instructions":"""
+This is a post instruction
+that has two lines"""
+    }
+]
+</code></pre>
+
+<p>When the command is run, you will see output similar to the following:</p>
+
+<pre><code>RUNNING COMMAND: ls /tmp
+RUNNING COMMAND: exit 0
+RUNNING COMMAND: ls ~
+AUTOMATED TESTING RESULTS:
+[PASS]      ls /tmp
+[PASS]      exit 0
+[PASS]      ls ~
+POST AUTOMATION STEPS:
+
+This is a test instruction
+
+This is a test
+multi-line instruction.
+</code></pre>
+
+<p>And a failed run:</p>
+
+<pre><code>RUNNING COMMAND: ls /tmp
+RUNNING COMMAND: exit 1
+OUTPUT: 
+AUTOMATED TESTING RESULTS:
+[PASS]      ls /tmp
+[FAILED]    exit 1
+[SKIPPED]   ls ~
+POST AUTOMATION STEPS:
+</code></pre>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/chipchilders">chipchilders</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
